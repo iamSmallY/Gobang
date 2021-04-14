@@ -245,6 +245,26 @@ class GameInterface(AbstractInterface):
         self.__back_button = Button('Menu', BUTTON_COLOR, True,
                                     BOARD_WIDTH + 30, 2 * BUTTON_HEIGHT + 190)
 
+    def enable_restart_button(self):
+        """启用重新开始按钮。
+
+        启用重新开始按钮的同时需要禁用投降按钮。
+        """
+        if not self.__restart_button.enabled:
+            self.__restart_button.reverse_enabled()
+        if self.__give_up_button.enabled:
+            self.__give_up_button.reverse_enabled()
+
+    def enable_give_up_button(self):
+        """启用投降按钮。
+
+        启用投降按钮的同时需要禁用重新开始按钮。
+        """
+        if not self.__give_up_button.enabled:
+            self.__give_up_button.reverse_enabled()
+        if self.__restart_button.enabled:
+            self.__restart_button.reverse_enabled()
+
     @staticmethod
     def check_in_board(_x, _y):
         """检查坐标是否在棋盘内方法。
