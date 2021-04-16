@@ -36,14 +36,13 @@ class AbstractInterface(object):
         pass
 
     @abstractmethod
-    def check_buttons(self, _mouse_x, _mouse_y):
+    def check_buttons(self, _mouse_pos):
         """检查按钮点击抽象方法。
 
         检查是否有按钮被点击。
 
         Args:
-            _mouse_x: 鼠标点击的 x 坐标
-            _mouse_y: 鼠标点击的 y 坐标
+            _mouse_pos: 鼠标点击的坐标
 
         Returns:
             有按钮被点击时，返回 ButtonEnum 中对应按钮类型，\n
@@ -77,18 +76,18 @@ class FirstInterface(AbstractInterface):
 
         # 创建首页上标题。
         self.__title_text = Text(None, TITLE_HEIGHT, 'Gobang',
-                                 WHITE_COLOR, TITLE_X, TITLE_Y)
+                                 WHITE_COLOR, (TITLE_X, TITLE_Y))
 
         # 创建首页上按钮。
         self.__start_button = Button('Start', BUTTON_COLOR, True,
-                                     TITLE_X - BUTTON_WIDTH // 2,
-                                     TITLE_Y + TITLE_HEIGHT)
+                                     (TITLE_X - BUTTON_WIDTH // 2,
+                                      TITLE_Y + TITLE_HEIGHT))
         self.__model_button = Button('PVE', MODULE_BUTTON_COLOR, True,
-                                     TITLE_X - BUTTON_WIDTH // 2,
-                                     TITLE_Y + TITLE_HEIGHT + 60)
+                                     (TITLE_X - BUTTON_WIDTH // 2,
+                                      TITLE_Y + TITLE_HEIGHT + 60))
         self.__exit_button = Button('Exit', BUTTON_COLOR, True,
-                                    TITLE_X - BUTTON_WIDTH // 2,
-                                    TITLE_Y + TITLE_HEIGHT + 120)
+                                    (TITLE_X - BUTTON_WIDTH // 2,
+                                     TITLE_Y + TITLE_HEIGHT + 120))
 
     def draw(self):
         """绘制首页方法。
@@ -100,24 +99,23 @@ class FirstInterface(AbstractInterface):
         self.__draw_button(self.__model_button)
         self.__draw_button(self.__exit_button)
 
-    def check_buttons(self, _mouse_x, _mouse_y):
+    def check_buttons(self, _mouse_pos):
         """检查首页按钮点击方法。
 
         检查首页是否有按钮被点击。
 
         Args:
-            _mouse_x: 鼠标点击的 x 坐标
-            _mouse_y: 鼠标点击的 y 坐标
+            _mouse_pos: 鼠标点击的坐标
 
         Returns:
             有按钮被点击时，返回 ButtonEnum 中对应按钮类型，\n
             否则返回 ButtonEnum 中无按钮类型。
         """
-        if self.__start_button.clicked(_mouse_x, _mouse_y):
+        if self.__start_button.clicked(_mouse_pos):
             return ButtonEnum.START_BUTTON
-        if self.__model_button.clicked(_mouse_x, _mouse_y):
+        if self.__model_button.clicked(_mouse_pos):
             return ButtonEnum.MODULE_BUTTON
-        if self.__exit_button.clicked(_mouse_x, _mouse_y):
+        if self.__exit_button.clicked(_mouse_pos):
             return ButtonEnum.EXIT_BUTTON
         return ButtonEnum.NO_BUTTON
 
@@ -127,14 +125,14 @@ class FirstInterface(AbstractInterface):
         重新创建首页上的按钮。
         """
         self.__start_button = Button('Start', BUTTON_COLOR, True,
-                                     TITLE_X - BUTTON_WIDTH // 2,
-                                     TITLE_Y + TITLE_HEIGHT)
+                                     (TITLE_X - BUTTON_WIDTH // 2,
+                                      TITLE_Y + TITLE_HEIGHT))
         self.__model_button = Button('PVE', MODULE_BUTTON_COLOR, True,
-                                     TITLE_X - BUTTON_WIDTH // 2,
-                                     TITLE_Y + TITLE_HEIGHT + 60)
+                                     (TITLE_X - BUTTON_WIDTH // 2,
+                                      TITLE_Y + TITLE_HEIGHT + 60))
         self.__exit_button = Button('Exit', BUTTON_COLOR, True,
-                                    TITLE_X - BUTTON_WIDTH // 2,
-                                    TITLE_Y + TITLE_HEIGHT + 120)
+                                    (TITLE_X - BUTTON_WIDTH // 2,
+                                     TITLE_Y + TITLE_HEIGHT + 120))
 
     def __draw_background(self):
         """绘制首页背景。"""
@@ -166,11 +164,11 @@ class GameInterface(AbstractInterface):
 
         # 创建游戏界面上按钮。
         self.__restart_button = Button('Restart', BUTTON_COLOR, False,
-                                       BOARD_WIDTH + 30, 130)
+                                       (BOARD_WIDTH + 30, 130))
         self.__give_up_button = Button('GiveUp', BUTTON_COLOR, True,
-                                       BOARD_WIDTH + 30, BUTTON_HEIGHT + 160)
+                                       (BOARD_WIDTH + 30, BUTTON_HEIGHT + 160))
         self.__back_button = Button('Menu', BUTTON_COLOR, True,
-                                    BOARD_WIDTH + 30, 2 * BUTTON_HEIGHT + 190)
+                                    (BOARD_WIDTH + 30, 2 * BUTTON_HEIGHT + 190))
 
     def draw(self, _steps=None):
         """绘制游戏界面方法。
@@ -207,28 +205,27 @@ class GameInterface(AbstractInterface):
             res += 'Black.'
         else:
             res += 'White.'
-        text = Text(None, 30, res, BLUE_COLOR, BOARD_WIDTH + 100,
-                    SCREEN_HEIGHT - 45)
+        text = Text(None, 30, res, BLUE_COLOR,
+                    (BOARD_WIDTH + 100, SCREEN_HEIGHT - 45))
         self.__windows.blit(*text.text_element)
 
-    def check_buttons(self, _mouse_x, _mouse_y):
+    def check_buttons(self, _mouse_pos):
         """检查游戏界面按钮点击方法。
 
         检查游戏界面是否有按钮被点击。
 
         Args:
-            _mouse_x: 鼠标点击的 x 坐标
-            _mouse_y: 鼠标点击的 y 坐标
+            _mouse_pos: 鼠标点击的坐标
 
         Returns:
             有按钮被点击时，返回 ButtonEnum 中对应按钮类型，\n
             否则返回 ButtonEnum 中无按钮类型。
         """
-        if self.__restart_button.clicked(_mouse_x, _mouse_y):
+        if self.__restart_button.clicked(_mouse_pos):
             return ButtonEnum.RESTART_BUTTON
-        if self.__give_up_button.clicked(_mouse_x, _mouse_y):
+        if self.__give_up_button.clicked(_mouse_pos):
             return ButtonEnum.GIVE_UP_BUTTON
-        if self.__back_button.clicked(_mouse_x, _mouse_y):
+        if self.__back_button.clicked(_mouse_pos):
             return ButtonEnum.BACK_BUTTON
         return ButtonEnum.NO_BUTTON
 
@@ -239,11 +236,11 @@ class GameInterface(AbstractInterface):
         """
         self.__draw_background()
         self.__restart_button = Button('Restart', BUTTON_COLOR, False,
-                                       BOARD_WIDTH + 30, 130)
+                                       (BOARD_WIDTH + 30, 130))
         self.__give_up_button = Button('GiveUp', BUTTON_COLOR, True,
-                                       BOARD_WIDTH + 30, BUTTON_HEIGHT + 160)
+                                       (BOARD_WIDTH + 30, BUTTON_HEIGHT + 160))
         self.__back_button = Button('Menu', BUTTON_COLOR, True,
-                                    BOARD_WIDTH + 30, 2 * BUTTON_HEIGHT + 190)
+                                    (BOARD_WIDTH + 30, 2 * BUTTON_HEIGHT + 190))
 
     def enable_restart_button(self):
         """启用重新开始按钮。
@@ -266,17 +263,17 @@ class GameInterface(AbstractInterface):
             self.__restart_button.reverse_enabled()
 
     @staticmethod
-    def check_in_board(_x, _y):
+    def check_in_board(_pos):
         """检查坐标是否在棋盘内方法。
 
         Args:
-            _x: x 坐标
-            _y: y 坐标
+            _pos: 坐标
 
         Returns:
             坐标是否在棋盘内。
         """
-        return 0 < _x < BOARD_WIDTH and 0 < _y < BOARD_HEIGHT
+        x, y = _pos
+        return 0 < x < BOARD_WIDTH and 0 < y < BOARD_HEIGHT
 
     def __draw_background(self):
         """绘制游戏界面背景。"""
@@ -290,10 +287,8 @@ class GameInterface(AbstractInterface):
         # 绘制棋盘上线。
         for y in range(CHESS_MAX_NUM):
             # 画横线。
-            start_pos, end_pos = ((REC_SIZE // 2,
-                                   REC_SIZE // 2 + REC_SIZE * y),
-                                  (BOARD_WIDTH - REC_SIZE // 2,
-                                   REC_SIZE // 2 + REC_SIZE * y))
+            start_pos = REC_SIZE // 2, REC_SIZE // 2 + REC_SIZE * y
+            end_pos = BOARD_WIDTH - REC_SIZE // 2, REC_SIZE // 2 + REC_SIZE * y
             if y == CHESS_MAX_NUM // 2:
                 width = 2
             else:
@@ -302,10 +297,8 @@ class GameInterface(AbstractInterface):
                              end_pos, width)
         for x in range(CHESS_MAX_NUM):
             # 画竖线。
-            start_pos, end_pos = ((REC_SIZE // 2 + REC_SIZE * x,
-                                   REC_SIZE // 2),
-                                  (REC_SIZE // 2 + REC_SIZE * x,
-                                   BOARD_HEIGHT - REC_SIZE // 2))
+            start_pos = REC_SIZE // 2 + REC_SIZE * x, REC_SIZE // 2
+            end_pos = REC_SIZE // 2 + REC_SIZE * x, BOARD_HEIGHT - REC_SIZE // 2
             if x == BOARD_HEIGHT // 2:
                 width = 2
             else:
@@ -330,23 +323,22 @@ class GameInterface(AbstractInterface):
         }
         # 绘制已落下棋子。
         for i in range(len(_steps)):
-            board_x, board_y, turn = _steps[i]
-            x, y = get_chess_pos(board_x, board_y)
+            board_pos, turn = _steps[i]
+            x, y = get_chess_pos(board_pos)
             pos = (x + REC_SIZE // 2, y + REC_SIZE // 2)
             radius = CHESS_RADIUS
             if turn == PlayerEnum.PLAYER_ONE:
                 op_turn = PlayerEnum.PLAYER_TWO
             else:
                 op_turn = PlayerEnum.PLAYER_ONE
-            pygame.draw.circle(self.__windows, player_color[turn],
-                               pos, radius)
+            pygame.draw.circle(self.__windows, player_color[turn], pos, radius)
             text = Text(None, REC_SIZE * 2 // 3, str(i),
-                        player_color[op_turn], *pos)
+                        player_color[op_turn], pos)
             self.__windows.blit(*text.text_element)
         # 圈出最后落下的棋子。
         if len(_steps) > 0:
             last_pos = _steps[-1]
-            x, y = get_chess_pos(last_pos[0], last_pos[1])
+            x, y = get_chess_pos(last_pos[0])
             line_list = [(x, y), (x + REC_SIZE, y),
                          (x + REC_SIZE, y + REC_SIZE),
                          (x, y + REC_SIZE)]

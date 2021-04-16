@@ -36,31 +36,31 @@ def resource_path(path):
     return os.path.join(base_path, path)
 
 
-def get_chess_pos(_board_x, _board_y):
+def get_chess_pos(_board_pos):
     """获取棋子坐标。
 
     输入棋子在棋盘上的坐标，输出棋子在游戏中的真实坐标。
 
     Args:
-        _board_x: 棋盘上 x 坐标
-        _board_y: 棋盘上 y 坐标
+        _board_pos: 棋盘上坐标
 
     Returns:
         (真实 x 坐标， 真实 y 坐标).
     """
-    return _board_x * REC_SIZE, _board_y * REC_SIZE
+    board_x, board_y = _board_pos
+    return board_x * REC_SIZE, board_y * REC_SIZE
 
 
-def get_board_pos(_x, _y):
+def get_board_pos(_pos):
     """获取棋子在棋盘上坐标。
 
     输入棋子真实坐标，输出棋子在棋盘上坐标。
 
     Args:
-        _x: 真实 x 坐标
-        _y: 真实 y 坐标
+        _pos: 真实坐标
 
     Returns:
         (棋盘上 x 坐标，棋盘上 y 坐标).
     """
-    return _x // REC_SIZE, _y // REC_SIZE
+    x, y = _pos
+    return x // REC_SIZE, y // REC_SIZE

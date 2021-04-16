@@ -38,7 +38,6 @@ class Interactive(object):
         self.__in_first_interface = True
 
         # 初始化游戏相关数据。
-        # 任何对 __board 的操作都需要先行转置。
         self.__board = [[PlayerEnum.NO_PLAYER] * BOARD_WIDTH
                         for _ in range(BOARD_HEIGHT)]
         self.__now = PlayerEnum.PLAYER_ONE     # 默认玩家 1 先手。
@@ -84,24 +83,37 @@ class Interactive(object):
 
         pygame.display.update()
 
-    def __click(self, _mouse_x, _mouse_y):
+    def __make_one_step(self, _board_pos):
+        """进行一步落子方法。
+
+        先进行一步落子，再判断是否获胜，最后翻转当前落子者。
+
+        Args:
+            _board_pos: 落子坐标。
+        """
+        board_x, board_y = _board_pos
+        self.__board[board_x][board_y] = self.__now
+        self.__steps.append(((board_x, board_y), self.__now))
+        # TODO(SmallY): 胜负判断
+        self.__now, self.__next = self.__next, self.__now
+
+    def __click(self, _mouse_pos):
         """处理点击事件方法。
 
         根据所在界面，判断点击位置并处理。
 
         Args:
-            _mouse_x: 鼠标点击的 x 坐标
-            _mouse_y: 鼠标点击的 y 坐标
+            _mouse_pos: 鼠标点击的坐标
         """
         if self.__in_first_interface:
-            status = self.__first_interface.check_buttons(_mouse_x, _mouse_y)
+            status = self.__first_interface.check_buttons(_mouse_pos)
             if status == ButtonEnum.START_BUTTON:
                 self.__game_interface.reset()
                 self.__in_first_interface = False
             elif status == ButtonEnum.EXIT_BUTTON:
                 exit(0)
         else:
-            status = self.__game_interface.check_buttons(_mouse_x, _mouse_y)
+            status = self.__game_interface.check_buttons(_mouse_pos)
             if status == ButtonEnum.RESTART_BUTTON:
                 # 重新开始游戏，先清空游戏数据，并使得投降按钮可用。
                 self.__reset_game_data()
@@ -122,12 +134,13 @@ class Interactive(object):
                 if self.__use_AI and self.__now == PlayerEnum.PLAYER_TWO:
                     # 如果是 AI 的回合，则不可落子。
                     return
-                elif self.__game_interface.check_in_board(_mouse_x, _mouse_y):
-                    board_x, board_y = get_board_pos(_mouse_x, _mouse_y)
-                    if self.__board[board_y][board_x] == 0:
-                        self.__board[board_y][board_x] = self.__now
-                        self.__steps.append((board_x, board_y, self.__now))
-                        self.__now, self.__next = self.__next, self.__now
+                if self.__winner is not None:
+                    # 如果游戏结束，则不可落子。
+                    return
+                elif self.__game_interface.check_in_board(_mouse_pos):
+                    board_x, board_y = get_board_pos(_mouse_pos)
+                    if self.__board[board_x][board_y] == 0:
+                        self.__make_one_step((board_x, board_y))
 
     def __handle_event(self):
         """处理 Pygame 事件方法。"""
@@ -137,8 +150,7 @@ class Interactive(object):
                 exit(0)
             elif event.type == pygame.MOUSEBUTTONDOWN:
                 # 鼠标点击事件。
-                mouse_x, mouse_y = pygame.mouse.get_pos()
-                self.__click(mouse_x, mouse_y)
+                self.__click(pygame.mouse.get_pos())
 
     def __change_mouse_show(self):
         """更改鼠标样式方法。
@@ -146,7 +158,6 @@ class Interactive(object):
         在非 AI 模式，或 AI 模式但非后手落子时，更改鼠标样式，便于判断位置。\n
         当鼠标位于棋盘内且该处无棋子时，将鼠标变为一个亮红色的圆圈。
         """
-        mouse_x, mouse_y = pygame.mouse.get_pos()
         if self.__in_first_interface or self.__winner is not None:
             # 在非游戏中时，不修改鼠标样式
             pygame.mouse.set_visible(True)
@@ -155,12 +166,12 @@ class Interactive(object):
             # 在 AI 落子时，不修改鼠标样式
             pygame.mouse.set_visible(True)
             return
-        if self.__game_interface.check_in_board(mouse_x, mouse_y):
-            board_x, board_y = get_board_pos(mouse_x, mouse_y)
-            if self.__board[board_y][board_x] == 0:
+        if self.__game_interface.check_in_board(pygame.mouse.get_pos()):
+            board_x, board_y = get_board_pos(pygame.mouse.get_pos())
+            if self.__board[board_x][board_y] == 0:
                 pygame.mouse.set_visible(False)
                 pygame.draw.circle(self.__windows, LIGHT_RED,
-                                   (mouse_x, mouse_y), CHESS_RADIUS)
+                                   pygame.mouse.get_pos(), CHESS_RADIUS)
             else:
                 pygame.mouse.set_visible(True)
         else:
