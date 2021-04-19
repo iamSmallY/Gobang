@@ -65,5 +65,5 @@ class ChessScore(IntEnum):
     SLEEP_THREE = 10,
     LIVE_TWO = 8,
     SLEEP_TWO = 2,
-    MAX = 0x7fffffff,
-    MIN = -1 * 0x7fffffff,
+    MAX = 10000,
+    MIN = -10000,
