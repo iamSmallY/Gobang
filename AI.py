@@ -605,14 +605,3 @@ class AI:
         o_score += opponent_count[ChessType.SLEEP_TWO] * 2
 
         return m_score, o_score
-
-
-if __name__ == '__main__':
-    def test(i, a):
-        if i == 3: return
-        print(a)
-        test(i + 1, a[::-1])
-        test(i + 1, a[::-1])
-
-    test(0, (1, 2))
-    pass
