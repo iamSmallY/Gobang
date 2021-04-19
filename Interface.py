@@ -11,6 +11,7 @@
     2021/4/13 23:04
 """
 from abc import abstractmethod
+from abc import ABCMeta
 
 import pygame
 import pygame.image
@@ -24,6 +25,7 @@ from Utils import resource_path
 from Utils import get_chess_pos
 
 
+@ABCMeta
 class AbstractInterface(object):
     """界面超类。"""
 
