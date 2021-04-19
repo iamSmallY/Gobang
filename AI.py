@@ -14,7 +14,6 @@ from Constant import ChessType
 from Constant import ChessScore
 from Constant import PlayerEnum
 from Settings import *
-from Utils import random_score
 
 
 class AI:
@@ -175,7 +174,7 @@ class AI:
             _player: (己方玩家编号, 敌方玩家编号)
 
         Returns:
-            随机化后的棋局分值。
+            棋局分值。
         """
         mine, opponent = _player
         visited = [[[False] * CHESS_MAX_NUM
@@ -199,7 +198,7 @@ class AI:
                             _board, pos, _player[::-1], offset, count[opponent],
                             visited[i])
         m_s, o_s = self.__get_board_score([count[mine], count[opponent]])
-        return random_score(m_s - o_s)
+        return m_s - o_s
 
     def __evaluate_point(self, _board, _pos, _player):
         """计算 _pos 处分值。
