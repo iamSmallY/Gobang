@@ -82,6 +82,7 @@ class Interactive(object):
         self.__steps.append(((board_x, board_y), now))
         if self.__ai.game_over(self.__board, _board_pos, self.__player):
             self.__winner = now
+            self.__game_interface.enable_restart_button()
         self.__player = self.__player[::-1]
 
     def __click(self, _mouse_pos):
