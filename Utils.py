@@ -12,6 +12,7 @@
 """
 import os
 import sys
+from random import randint
 
 from Settings import *
 
@@ -64,3 +65,30 @@ def get_board_pos(_pos):
     """
     x, y = _pos
     return x // REC_SIZE, y // REC_SIZE
+
+
+def board_to_str(_board):
+    """获取棋盘的 str 形式。
+
+    Args:
+        _board: 棋盘数组
+
+    Returns:
+        棋盘的字符串形式。
+    """
+    return "".join(["".join([str(i.value) for i in j]) for j in _board])
+
+
+def random_score(score):
+    """使得分值进行上下 1% 的浮动。
+
+    Args:
+        score: 分值
+
+    Returns:
+        随机浮动的分值。
+    """
+    rand = randint(0, 200)
+    # 产生 -10% - 10% 之间的随机数
+    rand = (rand - 100) / 1000
+    return int(score + rand * score)
